@@ -26,7 +26,7 @@ Create Person and Address File
     ${street}=    FakerLibrary.Street Address
     ${postcode}=    FakerLibrary.Postcode
     ${city}=    FakerLibrary.City
-    Create File       ${new_file_name}
+    Create File    ${new_file_name}
     File Should Exist    ${new_file_name}
     Append To File    ${new_file_name}    ${chosen_name}\n
     Append To File    ${new_file_name}    ${street}
