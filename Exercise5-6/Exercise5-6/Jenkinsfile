@@ -1,0 +1,33 @@
+pipeline {
+  agent { label 'pico-build' }
+
+  stages {
+    stage('Build') {
+      steps {
+        echo "####################        STAGE BUILD:   docker         ####################"
+        bat script: "docker compose up"
+      }
+    }
+
+    stage('Program') {
+      steps {
+        echo "####################      STAGE PROGRAM:   openocd        ####################"
+        bat script: "${env.OPENOCD_EXE} -s ${env.OPENOCD_SCRIPTS_PATH} -f ${env.PICO_DBG_CFG} -c \"gdb port disabled\" -c \"tcl port disabled\" -c \"program \\\"${env.ELF_FILE}\\\"\" -c reset -c shutdown"
+      }
+    }
+
+    stage('Test') {
+      steps {
+        echo "####################         STAGE TEST:   robot          ####################"
+        bat script: "robot --variable COM_PORT:${env.COM_PORT} ${env.ROBOT_TESTS_PATH}"
+        robot (archiveDirName: 'robot-plugin',
+               logFileName: 'log.html',
+               outputFileName: 'output.xml',
+               outputPath: '.',
+               overwriteXAxisLabel: '',
+               reportFileName: 'report.html')
+      }
+    }
+
+  }
+}
