@@ -23,11 +23,11 @@ ${AFTER_SCREENSHOOT_FILENAME}     after_part2.png
 *** Test Cases ***
 Add Ten Random Toyota Skoda or Audi
     Go To          ${LOCAL_HOST_URL}
+    Screenshot     ${BEFORE_SCREENSHOOT_FILENAME}
     FOR  ${i}  IN RANGE  10
         ${make}    ${model}    ${mileage}    ${year}    ${plate}=    Get Random Car    ${MAKE_SCOPE}
         Add Car    ${make}    ${model}    ${mileage}    ${year}    ${plate}
     END
-    Screenshot     ${BEFORE_SCREENSHOOT_FILENAME}
 
 Remove All Specific Make
     Go To                         ${LOCAL_HOST_URL}
