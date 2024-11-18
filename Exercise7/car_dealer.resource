@@ -1,5 +1,6 @@
 *** Settings ***
 Library              SeleniumLibrary
+Library              Process
 
 *** Variables ***
 # Generic settings
@@ -31,6 +32,13 @@ ${CAR_3_YEAR}        2020
 ${CAR_3_PLATE}       DEF-9876
 
 *** Keywords ***
+Docker Setup
+    Run Process     docker-compose    up    --detach
+    Sleep    5s
+
+Docker Teardown
+    Run Process     docker-compose    down
+
 Add Car
     [Arguments]     ${make}    ${model}    ${mileage}    ${year}    ${plate}
     Click Link      xpath=//a[contains(text(),'Add a car')]
