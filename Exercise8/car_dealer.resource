@@ -5,7 +5,7 @@ Library                  FakerVehicleLibrary.py
 
 *** Variables ***
 # Flag to enable / disable Docker
-${DOCKER_MODE}           False
+${DOCKER_MODE}           True
 
 # Generic settings
 ${BROWSER}               Chrome
@@ -17,7 +17,11 @@ ${UNLIMITED}             unlimited
 ${LIMITED}               limited
 
 # Car button description
-${ADD_NEW_CAR_BUTTON}    input[@type='submit' and @value='Add a new car']
+${ADD_CAR_BUTTON}        xpath=//a[contains(text(),'Add a car')]
+${ADD_NEW_CAR_BUTTON}    xpath=//input[@type='submit' and @value='Add a new car']
+
+# Array first element's index
+${FIRST_ELEMENT}         0
 
 *** Keywords ***
 Environment Setup
@@ -52,24 +56,23 @@ Get Random Car
 
 Add Car
     [Arguments]    ${make}    ${model}    ${mileage}    ${year}    ${plate}
-    Click Link                       xpath=//a[contains(text(),'Add a car')]
-    Wait Until Element Is Visible    xpath=//${ADD_NEW_CAR_BUTTON}    timeout=10
+    Click Link                       ${ADD_CAR_BUTTON}
+    Wait Until Element Is Visible    ${ADD_NEW_CAR_BUTTON}    timeout=10
     Input Text                       id=make-input       ${make}
     Input Text                       id=model-input      ${model}
     Input Text                       id=mileage-input    ${mileage}
     Input Text                       id=year-input       ${year}
     Input Text                       id=plate-input      ${plate}
-    Click Button                     xpath=//${ADD_NEW_CAR_BUTTON}
+    Click Button                     ${ADD_NEW_CAR_BUTTON}
 
 Remove Car
-    [Arguments]    ${car_param}   ${car_param_path}
-    ${car_list}=    Get WebElements    ${car_param_path}
-    FOR  ${current_car}  IN  @{car_list}
-        ${current_car_param}=    Get Text   ${current_car}
-        IF  '${current_car_param}' == '${car_param}'
-            Open Context Menu    ${current_car}
-            Handle Alert         ACCEPT
-        END
+    [Arguments]    ${car_param}
+    ${cars_to_remove}    Set Variable    xpath=//*[@id="car-container"]//span[text()='${car_param}']
+    ${cars_to_remove_list}=    Get WebElements    ${cars_to_remove}
+    WHILE  ${cars_to_remove_list}
+        Open Context Menu    ${cars_to_remove_list}[${FIRST_ELEMENT}]
+        Handle Alert         ACCEPT
+        ${cars_to_remove_list}=    Get WebElements    ${cars_to_remove}
     END
 
 Verify Does Not Exist

@@ -43,7 +43,7 @@ Add Two Random Cars
 
 Remove Specific Car Plate
     Go To                          ${LOCAL_HOST_URL}
-    Remove Car                     ${SPECIFIC_PLATE}    ${PLATE_ELEMENTS_PATH}
+    Remove Car                     ${SPECIFIC_PLATE}
 
 Verify Specific Car Plate Does Not Exist
     Go To                          ${LOCAL_HOST_URL}

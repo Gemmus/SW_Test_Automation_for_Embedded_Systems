@@ -31,7 +31,7 @@ Add Ten Random Toyota Skoda or Audi
 
 Remove All Specific Make
     Go To                         ${LOCAL_HOST_URL}
-    Remove Car                    ${SPECIFIC_MAKE}    ${MAKE_ELEMENTS_PATH}
+    Remove Car                    ${SPECIFIC_MAKE}
 
 Verify No Specific Make Exist
     Go To                         ${LOCAL_HOST_URL}
