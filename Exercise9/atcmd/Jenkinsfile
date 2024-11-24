@@ -1,0 +1,40 @@
+pipeline {
+  agent { label 'pico-build' }
+
+  stages {
+    stage('Build and Unit Test') {
+      parallel {
+        stage('Build') {
+          steps {
+            echo "#################### STAGE BUILD: docker ####################"
+            bat script: "docker compose up"
+          }
+        }
+        stage('Ceedling') {
+          steps {
+            echo "#################### STAGE PROGRAM: ceedling unit testing ####################"
+            bat script: "ceedling.bat"
+          }
+        }
+      }
+    }
+  }
+  post {
+    always {
+      xunit(
+        thresholds: [
+          failed(failureThreshold: '100'),
+          skipped(failureThreshold: '100')
+        ],
+        tools: [
+          Custom(
+            customXSL: 'unity.xsl', 
+            pattern: 'build/artifacts/test/*.xml',
+            skipNoTestFiles: true, 
+            stopProcessingIfError: false
+          )
+        ]
+      )
+    }
+  }
+}
