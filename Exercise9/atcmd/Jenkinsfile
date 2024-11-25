@@ -28,9 +28,9 @@ pipeline {
         ],
         tools: [
           Custom(
-            customXSL: 'unity.xsl', 
+            customXSL: 'unity.xsl',
             pattern: 'build/artifacts/test/*.xml',
-            skipNoTestFiles: true, 
+            skipNoTestFiles: false,
             stopProcessingIfError: false
           )
         ]
